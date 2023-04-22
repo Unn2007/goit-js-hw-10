@@ -1,9 +1,7 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-
-
 import debounce from 'lodash.debounce';
-const DEBOUNCE_DELAY = 1000;
+const DEBOUNCE_DELAY = 300;
 const refs = {
 inputCountryName:document.querySelector("#search-box"),
 countryList:document.querySelector(".country-list"),
@@ -15,10 +13,11 @@ function onInput(e) {
     refs.countryInfo.innerHTML = "";
 
    let inputName = e.target.value;
+   if (inputName.trim()==="") {return};
    fetchUsers(inputName.trim())
     .then((countries) => {
-        if (inputName.trim()==="") {return};
-       if (countries.length===1) {renderCountryInfo(countries)
+  if (countries.length===1) {
+    renderCountryInfo(countries)
     return};
     if (countries.length>10) {
         Notiflix.Notify.success("Too many matches found. Please enter a more specific name.");
@@ -27,7 +26,9 @@ function onInput(e) {
     renderListCountries(countries);
 
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      Notiflix.Notify.failure("Oops, there is no country with that name.");
+      console.log(error)});
 
    
 };
@@ -81,42 +82,4 @@ function renderListCountries(countriesInfo) {
         refs.countryInfo.innerHTML = markup;
       }
       
-
-// const fetchUsersBtn = document.querySelector(".btn");
-// const userList = document.querySelector(".user-list");
-
-// fetchUsersBtn.addEventListener("click", () => {
-//   fetchUsers()
-//     .then((users) => renderUserList(users))
-//     .catch((error) => console.log(error));
-// });
-
-// function fetchUsers() {
-//   return fetch(
-//     "https://jsonplaceholder.typicode.com/users?_limit=7&_sort=name"
-//   ).then((response) => {
-//     if (!response.ok) {
-//       throw new Error(response.status);
-//     }
-//     return response.json();
-//   });
-// }
-
-// function renderUserList(users) {
-//   const markup = users
-//     .map((user) => {
-//       return `
-//           <li>
-//             <p><b>Name</b>: ${user.name}</p>
-//             <p><b>Email</b>: ${user.email}</p>
-//             <p><b>Company</b>: ${user.company.name}</p>
-//           </li>
-//       `;
-//     })
-//     .join("");
-//   userList.innerHTML = markup;
-// }
-
-
-
 
